@@ -70,7 +70,7 @@
     <script>
         // The URL of your Google Apps Script Web App.
         // Replace 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE' with your actual URL.
-        const googleAppsScriptURL = https://script.google.com/macros/s/AKfycbxiHjDokFNxVRaCNcmFoTgTflTZKC3pPby9iRgEeTJ6LwBlI9_zJQOQdnNGVu4ye0JU/exec;
+        const googleAppsScriptURL = 'https://script.google.com/macros/s/AKfycbxMcBuhaM9rK_hbv3yESJAv1Cx-RiyTZz3OGcxIC6CJ2-A_9nY-n3pBLavGRgZE73Zq/exec';
 
         document.getElementById('signup-form').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevents the default form submission
@@ -80,24 +80,24 @@
 
             const form = event.target;
             
-            // Create a JavaScript object with the form data.
-            const formData = {
-                name: form.name.value,
-                phone: form.phone.value,
-                email: form.email.value
-            };
+            // Create a URLSearchParams object with the form data.
+            const formData = new URLSearchParams();
+            formData.append("name", form.name.value);
+            formData.append("phone", form.phone.value);
+            formData.append("email", form.email.value);
 
             fetch(googleAppsScriptURL, {
                 method: 'POST',
-                mode: 'no-cors', // Required for Google Apps Script to work with client-side JavaScript
+                // Remove 'no-cors' mode
                 cache: 'no-cache',
                 headers: {
-                    'Content-Type': 'application/json' // Tell the server we are sending JSON
+                    // Set the Content-Type for form-urlencoded data
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: JSON.stringify(formData) // Convert the object to a JSON string
+                body: formData // Send the URLSearchParams object as the body
             })
             .then(response => {
-                // Because of 'no-cors', we can't read the response. We just assume success.
+                // The response from Apps Script is a success, but we can't read the content due to browser security.
                 console.log("Form submitted successfully!");
                 showMessage("Success!", "bg-green-500");
                 form.reset(); // Reset the form fields after successful submission
