@@ -67,59 +67,48 @@
         </form>
     </div>
 
-    <script>
-        // The URL of your Google Apps Script Web App.
-        // Replace 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE' with your actual URL.
-        const googleAppsScriptURL = 'https://script.google.com/macros/s/AKfycbyotY6t_t6uJwd4d5NdGlq2Ql2HY9i0KTl6rgivTO17KLND7WMcuMyCp40tDXX0qd8p/exec';
+<script>
+  const googleAppsScriptURL = 'PASTE_YOUR_/exec_URL_HERE';
 
-        document.getElementById('signup-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevents the default form submission
-            
-            // Show a loading message
-            showMessage("Submitting...", "bg-yellow-500");
+  document.getElementById('signup-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    showMessage("Submitting...", "bg-yellow-500");
 
-            const form = event.target;
-            
-            // Create a JavaScript object with the form data.
-            const formData = {
-                name: form.name.value,
-                phone: form.phone.value,
-                email: form.email.value
-            };
+    const form = event.target;
 
-            fetch(googleAppsScriptURL, {
-                method: 'POST',
-                // Removed 'no-cors' mode as it prevents headers from being sent
-                cache: 'no-cache',
-                headers: {
-                    'Content-Type': 'application/json' // We are now sending JSON
-                },
-                body: JSON.stringify(formData) // Convert the object to a JSON string
-            })
-            .then(response => {
-                // The response from Apps Script is a success, but we can't read the content due to browser security.
-                console.log("Form submitted successfully!");
-                showMessage("Success!", "bg-green-500");
-                form.reset(); // Reset the form fields after successful submission
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showMessage("Submission failed. Please try again.", "bg-red-500");
-            });
-        });
+    fetch(googleAppsScriptURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded' // key change
+      },
+      body: new URLSearchParams({
+        name: form.name.value,
+        phone: form.phone.value,
+        email: form.email.value
+      })
+    })
+    .then(async (response) => {
+      // Optional: read text for debugging
+      const text = await response.text();
+      console.log('Server says:', text);
+      if (response.ok && /Success/i.test(text)) {
+        showMessage("Success!", "bg-green-500");
+        form.reset();
+      } else {
+        showMessage("Submission error. Check console.", "bg-red-500");
+      }
+    })
+    .catch((error) => {
+      console.error('Fetch error:', error);
+      showMessage("Submission failed. Please try again.", "bg-red-500");
+    });
+  });
 
-        // Function to show a temporary message box
-        function showMessage(message, bgColor) {
-            const msgBox = document.getElementById('messageBox');
-            msgBox.textContent = message;
-            msgBox.className = `message-box ${bgColor} text-white`;
-            msgBox.style.display = 'block';
-
-            // Hide the message after 3 seconds
-            setTimeout(() => {
-                msgBox.style.display = 'none';
-            }, 3000);
-        }
-    </script>
-</body>
-</html>
+  function showMessage(message, bgColor) {
+    const msgBox = document.getElementById('messageBox');
+    msgBox.textContent = message;
+    msgBox.className = `message-box ${bgColor} text-white`;
+    msgBox.style.display = 'block';
+    setTimeout(() => { msgBox.style.display = 'none'; }, 3000);
+  }
+</script>
