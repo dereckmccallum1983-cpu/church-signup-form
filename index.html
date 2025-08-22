@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Culture Circles Sign-Up</title>
+    <!-- Use Tailwind CSS for easy and beautiful styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Main container for the form -->
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-lg w-full">
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Culture Circles Sign-Up</h1>
+            <p class="mt-2 text-gray-500">Join a community focused on growing in faith and fellowship.</p>
+        </div>
+        
+        <!-- Sign-up Form -->
+        <form id="signup-form" class="space-y-6">
+            
+            <!-- Name Input Field -->
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    required 
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
+                    placeholder="Jane Doe">
+            </div>
+
+            <!-- Phone Number Input Field -->
+            <div>
+                <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    required 
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
+                    placeholder="(123) 456-7890">
+            </div>
+
+            <!-- Email Address Input Field -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    required 
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
+                    placeholder="jane.doe@example.com">
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                <button 
+                    type="submit" 
+                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-200"
+                >
+                    Sign Up
+                </button>
+            </div>
+        </form>
+
+        <!-- Message Box for user feedback -->
+        <div id="message-box" class="mt-6 hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl relative" role="alert">
+            <span class="block sm:inline" id="message-text"></span>
+        </div>
+
+    </div>
+
+    <script>
+        // Get the form and the message box elements
+        const form = document.getElementById('signup-form');
+        const messageBox = document.getElementById('message-box');
+        const messageText = document.getElementById('message-text');
+
+        // Listen for the form submission event
+        form.addEventListener('submit', async function(event) {
+            // Prevent the default form submission to a new page
+            event.preventDefault();
+
+            // Collect all form data
+            const formData = new FormData(form);
+            const data = {
+                name: formData.get('name'),
+                phone: formData.get('phone'),
+                email: formData.get('email')
+            };
+
+            // Display a loading message
+            messageBox.classList.remove('hidden', 'bg-green-100', 'bg-red-100', 'bg-blue-100');
+            messageBox.classList.add('bg-blue-100');
+            messageText.textContent = "Submitting your information...";
+
+            try {
+                // IMPORTANT: This is the part that connects to Google Sheets.
+                // YOU MUST REPLACE THE URL BELOW WITH THE WEB APP URL FROM YOUR GOOGLE APPS SCRIPT.
+                const googleAppsScriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+                
+                // Construct the request
+                const response = await fetch(googleAppsScriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors', // This is often required for simple web apps
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                
+                // Since 'no-cors' mode is used, we can't check the response status.
+                // We'll assume success for now, as errors are typically caught by the catch block.
+                messageBox.classList.remove('bg-red-100', 'bg-blue-100');
+                messageBox.classList.add('bg-green-100');
+                messageText.textContent = "Thank you! Your sign-up has been submitted successfully.";
+                form.reset(); // Clear the form fields after successful submission
+
+            } catch (error) {
+                // Handle any errors that occur during the submission
+                console.error('Error submitting form:', error);
+                messageBox.classList.remove('bg-green-100', 'bg-blue-100');
+                messageBox.classList.add('bg-red-100');
+                messageText.textContent = "There was an error submitting your form. Please try again.";
+            } finally {
+                // Hide the message after 5 seconds, regardless of success or failure
+                setTimeout(() => {
+                    messageBox.classList.add('hidden');
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>
+
