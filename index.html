@@ -70,7 +70,7 @@
     <script>
         // The URL of your Google Apps Script Web App.
         // Replace 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE' with your actual URL.
-        const googleAppsScriptURL = 'https://script.google.com/macros/s/AKfycbxtzcEn5rjkMzJhLoj4rGx7WrrT7NNnnIMrFJNX_pxISLXpwKsB6gRGhq7nX_UnYXMx/exec';
+        const googleAppsScriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
 
         document.getElementById('signup-form').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevents the default form submission
@@ -80,21 +80,21 @@
 
             const form = event.target;
             
-            // Create a URLSearchParams object with the form data.
-            const formData = new URLSearchParams();
-            formData.append("name", form.name.value);
-            formData.append("phone", form.phone.value);
-            formData.append("email", form.email.value);
+            // Create a JavaScript object with the form data.
+            const formData = {
+                name: form.name.value,
+                phone: form.phone.value,
+                email: form.email.value
+            };
 
             fetch(googleAppsScriptURL, {
                 method: 'POST',
-                // Remove 'no-cors' mode
+                // Removed 'no-cors' mode as it prevents headers from being sent
                 cache: 'no-cache',
                 headers: {
-                    // Set the Content-Type for form-urlencoded data
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/json' // We are now sending JSON
                 },
-                body: formData // Send the URLSearchParams object as the body
+                body: JSON.stringify(formData) // Convert the object to a JSON string
             })
             .then(response => {
                 // The response from Apps Script is a success, but we can't read the content due to browser security.
