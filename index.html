@@ -3,143 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Culture Circles Sign-Up</title>
-    <!-- Use Tailwind CSS for easy and beautiful styling -->
+    <title>Church Sign-Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for the message box */
+        .message-box {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            text-align: center;
+            transition: all 0.5s ease-in-out;
         }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
 
-    <!-- Main container for the form -->
-    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-lg w-full">
-        <!-- Header Section -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Culture Circles Sign-Up</h1>
-            <p class="mt-2 text-gray-500">Join a community focused on growing in faith and fellowship.</p>
-        </div>
-        
-        <!-- Sign-up Form -->
-        <form id="signup-form" class="space-y-6">
-            
-            <!-- Name Input Field -->
+    <!-- Message Box for notifications -->
+    <div id="messageBox" class="message-box bg-green-500 text-white"></div>
+
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-lg space-y-6">
+        <h1 class="text-3xl font-bold text-center text-gray-800">Church Sign-Up</h1>
+        <p class="text-center text-gray-600">Please fill out the form to sign up for our church event.</p>
+
+        <form id="signup-form" class="space-y-4">
+            <!-- Name Input -->
             <div>
-                <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
-                <input 
-                    type="text" 
-                    id="name" 
-                    name="name" 
-                    required 
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
-                    placeholder="Jane Doe">
+                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                <input type="text" id="name" name="name" placeholder="John Doe" required
+                       class="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
-            <!-- Phone Number Input Field -->
+            <!-- Phone Input -->
             <div>
-                <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
-                <input 
-                    type="tel" 
-                    id="phone" 
-                    name="phone" 
-                    required 
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
-                    placeholder="(123) 456-7890">
+                <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                <input type="tel" id="phone" name="phone" placeholder="123-456-7890" required
+                       class="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
-            <!-- Email Address Input Field -->
+            <!-- Email Input -->
             <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    required 
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
-                    placeholder="jane.doe@example.com">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="email" name="email" placeholder="john.doe@example.com" required
+                       class="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             <!-- Submit Button -->
-            <div>
-                <button 
-                    type="submit" 
-                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-200"
-                >
-                    Sign Up
+            <div class="flex justify-center pt-4">
+                <button type="submit"
+                        class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-transform transform hover:scale-105">
+                    Submit
                 </button>
             </div>
         </form>
-
-        <!-- Message Box for user feedback -->
-        <div id="message-box" class="mt-6 hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl relative" role="alert">
-            <span class="block sm:inline" id="message-text"></span>
-        </div>
-
     </div>
 
     <script>
-        // Get the form and the message box elements
-        const form = document.getElementById('signup-form');
-        const messageBox = document.getElementById('message-box');
-        const messageText = document.getElementById('message-text');
+        // The URL of your Google Apps Script Web App.
+        // Replace 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE' with your actual URL.
+        const googleAppsScriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
 
-        // Listen for the form submission event
-        form.addEventListener('submit', async function(event) {
-            // Prevent the default form submission to a new page
-            event.preventDefault();
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevents the default form submission
+            
+            // Show a loading message
+            showMessage("Submitting...", "bg-yellow-500");
 
-            // Collect all form data
-            const formData = new FormData(form);
-            const data = {
-                name: formData.get('name'),
-                phone: formData.get('phone'),
-                email: formData.get('email')
+            const form = event.target;
+            
+            // Create a JavaScript object with the form data.
+            const formData = {
+                name: form.name.value,
+                phone: form.phone.value,
+                email: form.email.value
             };
 
-            // Display a loading message
-            messageBox.classList.remove('hidden', 'bg-green-100', 'bg-red-100', 'bg-blue-100');
-            messageBox.classList.add('bg-blue-100');
-            messageText.textContent = "Submitting your information...";
-
-            try {
-                // IMPORTANT: This is the part that connects to Google Sheets.
-                // YOU MUST REPLACE THE URL BELOW WITH THE WEB APP URL FROM YOUR GOOGLE APPS SCRIPT.
-                const googleAppsScriptURL = https://script.google.com/macros/s/AKfycbxPQZluRJQxgT1s72gvuxSDQeMV7kk5Mw8p-hFarYcjYaZ7tmA2OilXWX2HVrzOAhwI/exec;
-                
-                // Construct the request
-                const response = await fetch(googleAppsScriptURL, {
-                    method: 'POST',
-                    mode: 'no-cors', // This is often required for simple web apps
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                });
-                
-                // Since 'no-cors' mode is used, we can't check the response status.
-                // We'll assume success for now, as errors are typically caught by the catch block.
-                messageBox.classList.remove('bg-red-100', 'bg-blue-100');
-                messageBox.classList.add('bg-green-100');
-                messageText.textContent = "Thank you! Your sign-up has been submitted successfully.";
-                form.reset(); // Clear the form fields after successful submission
-
-            } catch (error) {
-                // Handle any errors that occur during the submission
-                console.error('Error submitting form:', error);
-                messageBox.classList.remove('bg-green-100', 'bg-blue-100');
-                messageBox.classList.add('bg-red-100');
-                messageText.textContent = "There was an error submitting your form. Please try again.";
-            } finally {
-                // Hide the message after 5 seconds, regardless of success or failure
-                setTimeout(() => {
-                    messageBox.classList.add('hidden');
-                }, 5000);
-            }
+            fetch(googleAppsScriptURL, {
+                method: 'POST',
+                mode: 'no-cors', // Required for Google Apps Script to work with client-side JavaScript
+                cache: 'no-cache',
+                headers: {
+                    'Content-Type': 'application/json' // Tell the server we are sending JSON
+                },
+                body: JSON.stringify(formData) // Convert the object to a JSON string
+            })
+            .then(response => {
+                // Because of 'no-cors', we can't read the response. We just assume success.
+                console.log("Form submitted successfully!");
+                showMessage("Success!", "bg-green-500");
+                form.reset(); // Reset the form fields after successful submission
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage("Submission failed. Please try again.", "bg-red-500");
+            });
         });
+
+        // Function to show a temporary message box
+        function showMessage(message, bgColor) {
+            const msgBox = document.getElementById('messageBox');
+            msgBox.textContent = message;
+            msgBox.className = `message-box ${bgColor} text-white`;
+            msgBox.style.display = 'block';
+
+            // Hide the message after 3 seconds
+            setTimeout(() => {
+                msgBox.style.display = 'none';
+            }, 3000);
+        }
     </script>
 </body>
 </html>
-
