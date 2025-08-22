@@ -67,48 +67,56 @@
         </form>
     </div>
 
-<script>
-  const googleAppsScriptURL = 'https://script.google.com/macros/s/AKfycbxd2qiKHN6joXmPwubdA-LoeF5jNg50GfH2O6Wof63IpRZLS4Jib1nOLrrckRkBLosHnA/exec';
+    <script>
+        // Replace this with your actual Apps Script Web App URL (ending in /exec)
+        const googleAppsScriptURL = 'https://script.google.com/macros/s/AKfycbyC81Qh03U-XBLFwR9Ek5bgd2e8L4wTZIt-l5yvIlF987oN9aPXBf4FK-MFROop4_qpJA/exec';
 
-  document.getElementById('signup-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    showMessage("Submitting...", "bg-yellow-500");
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            showMessage("Submitting...", "bg-yellow-500");
 
-    const form = event.target;
+            const form = event.target;
 
-    fetch(googleAppsScriptURL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded' // key change
-      },
-      body: new URLSearchParams({
-        name: form.name.value,
-        phone: form.phone.value,
-        email: form.email.value
-      })
-    })
-    .then(async (response) => {
-      // Optional: read text for debugging
-      const text = await response.text();
-      console.log('Server says:', text);
-      if (response.ok && /Success/i.test(text)) {
-        showMessage("Success!", "bg-green-500");
-        form.reset();
-      } else {
-        showMessage("Submission error. Check console.", "bg-red-500");
-      }
-    })
-    .catch((error) => {
-      console.error('Fetch error:', error);
-      showMessage("Submission failed. Please try again.", "bg-red-500");
-    });
-  });
+            // Send data as URL-encoded
+            fetch(googleAppsScriptURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    name: form.name.value,
+                    phone: form.phone.value,
+                    email: form.email.value
+                })
+            })
+            .then(async (response) => {
+                const text = await response.text(); // Read server response
+                console.log("Server response:", text);
 
-  function showMessage(message, bgColor) {
-    const msgBox = document.getElementById('messageBox');
-    msgBox.textContent = message;
-    msgBox.className = `message-box ${bgColor} text-white`;
-    msgBox.style.display = 'block';
-    setTimeout(() => { msgBox.style.display = 'none'; }, 3000);
-  }
-</script>
+                if (response.ok && /Success/i.test(text)) {
+                    showMessage("Success!", "bg-green-500");
+                    form.reset();
+                } else {
+                    showMessage("Submission error. Check console.", "bg-red-500");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage("Submission failed. Please try again.", "bg-red-500");
+            });
+        });
+
+        // Function to show temporary messages
+        function showMessage(message, bgColor) {
+            const msgBox = document.getElementById('messageBox');
+            msgBox.textContent = message;
+            msgBox.className = `message-box ${bgColor} text-white`;
+            msgBox.style.display = 'block';
+
+            setTimeout(() => {
+                msgBox.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
